@@ -26,4 +26,32 @@ object week2 extends App {
     case class Lambda(x: Y, body: Exp) extends Exp
     case class App(rator:Exp, rand:Exp) extends Exp
 
+    // X combinator
+    // The above three lines are turing complete
+
+    // 3 == (add1 (add1 (add1 zero)))
+
+    // Free and bound
+
+    // lets do free first
+
+    def occursFree(x:Y , exp: Exp): Boolean = {
+      exp match {
+        case y@Y(_) => x == y
+        case Lambda(arg, body) => (arg != x) && occursFree(x, body)
+        case App(rator, rand) => occursFree(x, rator) || occursFree(x, rand)
+      }
+    }
+
+    def occursBound(x:Y , exp: Exp): Boolean = {
+      exp match {
+        case y@Y(_) => false
+        case Lambda(arg, body) => ((arg == x) && occursFree(x, body)) || occursBound(x, body)
+        case App(rator, rand) => occursFree(x, rator) || occursFree(x, rand)
+      }
+    }
+
+  println(occursFree(Y("x"), Y("x")))
+
+
 }
